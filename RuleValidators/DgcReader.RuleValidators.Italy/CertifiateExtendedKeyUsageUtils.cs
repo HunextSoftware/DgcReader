@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using DgcReader.Models;
+using System.Text;
 
 #if NETSTANDARD
 using System.Text;
@@ -23,6 +24,7 @@ namespace DgcReader.RuleValidators.Italy
         /// Read the extended key usage identifiers from the signer certificate
         /// </summary>
         /// <param name="signatureValidation"></param>
+        /// <param name="logger"></param>
         /// <returns></returns>
         public static IEnumerable<string> GetExtendedKeyUsages(SignatureValidationResult? signatureValidation, ILogger? logger)
         {
@@ -54,11 +56,16 @@ namespace DgcReader.RuleValidators.Italy
                 return Enumerable.Empty<string>();
 
 #else
-                var certificate = new X509Certificate2(signatureValidation.PublicKeyData.Certificate);
+                var certificate = new X509Certificate2(signatureValidation.PublicKeyData.Certificate); 
                 var enhancedKeyExtensions = certificate.Extensions.OfType<X509EnhancedKeyUsageExtension>();
 
+                if (enhancedKeyExtensions == null)
+                    return Enumerable.Empty<string>();
+
                 return enhancedKeyExtensions
-                    .SelectMany(e => e.EnhancedKeyUsages.OfType<Oid>().Select(r => r.Value))
+                    .SelectMany(e => e.EnhancedKeyUsages.OfType<Oid>())
+                    .Where(r => !string.IsNullOrEmpty(r.Value))
+                    .Select(r=>r.Value).Cast<string>()
                     .ToArray();
 #endif
             }
@@ -76,7 +83,8 @@ namespace DgcReader.RuleValidators.Italy
             const string PemHeader = "-----BEGIN CERTIFICATE-----";
             const string PemFooter = "-----END CERTIFICATE-----";
 
-            var decoded = Encoding.ASCII.GetString(certificateData);
+            var decoded = Convert.ToBase64String(certificateData);
+           
             if (!decoded.StartsWith(PemHeader) && !decoded.EndsWith(PemFooter))
             {
                 decoded = PemHeader + "\n" + decoded + "\n" + PemFooter;
