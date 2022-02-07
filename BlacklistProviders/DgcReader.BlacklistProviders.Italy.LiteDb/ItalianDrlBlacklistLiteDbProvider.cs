@@ -24,6 +24,13 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb
         private readonly SingleTaskRunner<SyncStatus> RefreshBlacklistTaskRunner;
         private DateTime LastRefreshAttempt;
 
+        /// <inheritdoc cref="ItalianDrlBlacklistLiteDbManager.DownloadProgressChanged"/>
+        public event EventHandler<DownloadProgressEventArgs> DownloadProgressChanged
+        {
+            add { BlacklistManager.DownloadProgressChanged += value; }
+            remove { BlacklistManager.DownloadProgressChanged -= value; }
+        }
+
         #region Constructor
         /// <summary>
         /// Constructor for the provider

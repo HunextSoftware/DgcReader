@@ -10,7 +10,10 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb.Test
         protected TestBase()
         {
             Configuration = LoadConfiguration();
-            InitializeServices();
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+
+            ServiceProvider = serviceCollection.BuildServiceProvider();
         }
 
         protected IConfiguration Configuration;
@@ -27,14 +30,6 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb.Test
                     .AddFilter("System", LogLevel.Warning)
                     .AddConsole().AddDebug();
             });
-        }
-
-        private void InitializeServices()
-        {
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-
-            ServiceProvider = serviceCollection.BuildServiceProvider();
         }
 
         private IConfiguration LoadConfiguration()

@@ -8,8 +8,7 @@ using DgcReader.RuleValidators.Italy;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-
-
+using System.Diagnostics;
 
 namespace DgcReader.BlacklistProviders.Italy.LiteDb.Test
 {
@@ -22,12 +21,13 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb.Test
             RefreshInterval = TimeSpan.FromSeconds(10),
             UseAvailableValuesWhileRefreshing = false,
         };
-        IBlacklistProvider BlacklistProvider { get; set; }
+
+        ItalianDrlBlacklistLiteDbProvider BlacklistProvider { get; set; }
 
         [TestInitialize]
         public async Task Initialize()
         {
-            BlacklistProvider = ServiceProvider.GetRequiredService<IBlacklistProvider>();
+            BlacklistProvider = ServiceProvider.GetRequiredService<ItalianDrlBlacklistLiteDbProvider>();
         }
 
         [TestMethod]
@@ -36,35 +36,28 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb.Test
             await BlacklistProvider.RefreshBlacklist();
         }
 
-        /// <summary>
-        /// Check if all the identifiers in the old blacklist are present in the new one
-        /// </summary>
-        /// <returns></returns>
         [TestMethod]
-        public async Task TestOldBlacklist()
+        public async Task TestDrlProgressEvents()
         {
-
-            // The validator implementing the old blacklist
-            var rulesValidator = ServiceProvider.GetRequiredService<DgcItalianRulesValidator>();
-
-            // Reading the old identifiers
-            var oldIdentifiers = await rulesValidator.GetBlacklist();
-
-            Console.WriteLine($"Checking {oldIdentifiers.Count()} old identifiers");
-
-            var missing = new List<string>();
-            foreach (var oldIdentifier in oldIdentifiers)
+            DownloadProgressEventArgs? lastProgress = null;
+            BlacklistProvider.DownloadProgressChanged += (sender, args) =>
             {
-                var isBlacklisted = await BlacklistProvider.IsBlacklisted(oldIdentifier);
-                if (!isBlacklisted)
-                {
-                    missing.Add(oldIdentifier);
-                    Console.WriteLine($"{oldIdentifier} is missing");
-                }
+                lastProgress = args;
+                Debug.WriteLine(args);
+            };
+
+            await BlacklistProvider.RefreshBlacklist();
+
+            if (lastProgress != null)
+            {
+                Assert.IsTrue(lastProgress.IsCompleted);
+                Assert.AreEqual(lastProgress.TotalProgressPercent, 1f);
+            }
+            else
+            {
+                Assert.Inconclusive("No values refreshed, no events");
             }
 
-            if (missing.Any())
-                Assert.Inconclusive($"{missing.Count} identifiers out of {oldIdentifiers.Count()} are missing from the new Blacklist");
         }
 
         [TestMethod]
