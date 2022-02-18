@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System;
 using DgcReader.Providers.Abstractions;
 using DgcReader.BlacklistProviders.Italy.Entities;
+using DgcReader.Interfaces.Deserializers;
+using DgcReader.Deserializers.Italy;
 
 #if !NET452
 using Microsoft.Extensions.Options;
@@ -19,7 +21,7 @@ namespace DgcReader.BlacklistProviders.Italy
     /// <summary>
     /// Blacklist provider using the Italian backend
     /// </summary>
-    public class ItalianDrlBlacklistProvider : IBlacklistProvider, IDisposable
+    public class ItalianDrlBlacklistProvider : IBlacklistProvider, ICustomDeserializerDependentService, IDisposable
     {
         private readonly ItalianDrlBlacklistProviderOptions Options;
         private readonly ILogger<ItalianDrlBlacklistProvider>? Logger;
@@ -129,8 +131,18 @@ namespace DgcReader.BlacklistProviders.Italy
 
                 var refreshTask = await RefreshBlacklistTaskRunner.RunSingleTask(cancellationToken);
 
-                // Wait for the task to complete
-                await refreshTask;
+                try
+                {
+                    // Wait for the task to complete
+                    await refreshTask;
+                }
+                catch (Exception e)
+                {
+                    Logger?.LogError(e, $"Can not refresh ItalianDrlBlacklist from remote server. " +
+                        $"Values from DRL version {status.CurrentVersion}, checked on {status.LastCheck} have reached MaxFileAge and can no longer be used.");
+                    throw;
+                }
+
             }
             else if (status.LastCheck.Add(Options.RefreshInterval) < DateTime.Now ||
                 status.HasPendingDownload())
@@ -143,8 +155,17 @@ namespace DgcReader.BlacklistProviders.Italy
                     var refreshTask = await RefreshBlacklistTaskRunner.RunSingleTask(cancellationToken);
                     if (!Options.UseAvailableValuesWhileRefreshing)
                     {
-                        // Wait for the task to complete
-                        await refreshTask;
+                        try
+                        {
+                            // Wait for the task to complete
+                            await refreshTask;
+                        }
+                        catch (Exception e)
+                        {
+                            // If refresh fail, continue until MaxFileAge
+                            Logger?.LogWarning(e, $"Can not refresh ItalianDrlBlacklist from remote server: {e.Message}. Values from DRL version {status.CurrentVersion}, checked on {status.LastCheck} will be used");
+                        }
+
                     }
                 }
             }
@@ -158,6 +179,11 @@ namespace DgcReader.BlacklistProviders.Italy
             var task = await RefreshBlacklistTaskRunner.RunSingleTask(cancellationToken);
             await task;
         }
+        #endregion
+
+        #region Implementation of ICustomDeserializerDependentService
+        /// <inheritdoc/>
+        public IDgcDeserializer GetCustomDeserializer() => new ItalianDgcDeserializer();
         #endregion
 
         /// <inheritdoc/>

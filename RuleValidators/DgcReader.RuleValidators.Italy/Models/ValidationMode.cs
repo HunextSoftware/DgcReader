@@ -24,9 +24,20 @@ namespace DgcReader.RuleValidators.Italy.Models
         /// </summary>
         Booster,
 
+        // Removed - see issue https://github.com/DevTrevi/DgcReader/issues/85
+        ///// <summary>
+        ///// Validates the certificate applying rules for school
+        ///// </summary>
+        //School,
+
         /// <summary>
-        /// Validates certificate applying rules for school
+        /// Validates the certificate applying rules for work
         /// </summary>
-        School,
+        Work,
+
+        /// <summary>
+        /// Validates the certificate applying rules needed for entry in Italy
+        /// </summary>
+        EntryItaly,
     }
 }

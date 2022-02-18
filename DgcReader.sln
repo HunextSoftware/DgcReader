@@ -5,6 +5,7 @@ VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5541974F-21E6-4B6E-AB62-1A78A34CB87C}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines-prerelease.yml = azure-pipelines-prerelease.yml
 		azure-pipelines.yml = azure-pipelines.yml
 		ItalianConfiguration.md = ItalianConfiguration.md
 		LICENSE = LICENSE
@@ -58,6 +59,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DgcReader.BlacklistProviders.Italy.LiteDb.Test", "BlacklistProviders\Test\DgcReader.BlacklistProviders.Italy.LiteDb.Test\DgcReader.BlacklistProviders.Italy.LiteDb.Test.csproj", "{C340A8F2-34D5-4B7E-AD1F-54D7ECCB51EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DgcReader.BlacklistProviders.Italy.LiteDb", "BlacklistProviders\DgcReader.BlacklistProviders.Italy.LiteDb\DgcReader.BlacklistProviders.Italy.LiteDb.csproj", "{A04AE1A8-FB4F-4E25-9E00-381E6652F81A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deserializers", "Deserializers", "{13E1A796-5B62-4014-ABEE-AA915BFEA54E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DgcReader.Deserializers.Italy", "Deserializers\DgcReader.Deserializers.Italy\DgcReader.Deserializers.Italy.csproj", "{9F1BBBFE-AD28-453C-B867-EC0B09C237D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +134,7 @@ Global
 		{2A0B4B80-E3F2-4A07-B45C-8543464E40E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A0B4B80-E3F2-4A07-B45C-8543464E40E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A0B4B80-E3F2-4A07-B45C-8543464E40E4}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{C340A8F2-34D5-4B7E-AD1F-54D7ECCB51EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C340A8F2-34D5-4B7E-AD1F-54D7ECCB51EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C340A8F2-34D5-4B7E-AD1F-54D7ECCB51EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -137,6 +143,12 @@ Global
 		{A04AE1A8-FB4F-4E25-9E00-381E6652F81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A04AE1A8-FB4F-4E25-9E00-381E6652F81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A04AE1A8-FB4F-4E25-9E00-381E6652F81A}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{9F1BBBFE-AD28-453C-B867-EC0B09C237D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F1BBBFE-AD28-453C-B867-EC0B09C237D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F1BBBFE-AD28-453C-B867-EC0B09C237D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F1BBBFE-AD28-453C-B867-EC0B09C237D7}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,8 +170,12 @@ Global
 		{CE72E1E6-56A8-4252-A50D-D6AF03655287} = {510DD3B5-6B7D-4024-A1C2-B2B925A3A01D}
 		{1240A31E-C3AB-428E-80E6-48CD29CD1E2B} = {510DD3B5-6B7D-4024-A1C2-B2B925A3A01D}
 		{2A0B4B80-E3F2-4A07-B45C-8543464E40E4} = {1240A31E-C3AB-428E-80E6-48CD29CD1E2B}
+<<<<<<< HEAD
 		{C340A8F2-34D5-4B7E-AD1F-54D7ECCB51EC} = {1240A31E-C3AB-428E-80E6-48CD29CD1E2B}
 		{A04AE1A8-FB4F-4E25-9E00-381E6652F81A} = {510DD3B5-6B7D-4024-A1C2-B2B925A3A01D}
+=======
+		{9F1BBBFE-AD28-453C-B867-EC0B09C237D7} = {13E1A796-5B62-4014-ABEE-AA915BFEA54E}
+>>>>>>> master
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B910BDD-0DA5-4052-94AE-2E889E4FB766}
