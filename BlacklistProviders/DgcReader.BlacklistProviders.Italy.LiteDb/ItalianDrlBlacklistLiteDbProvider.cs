@@ -7,6 +7,8 @@ using System;
 using DgcReader.Providers.Abstractions;
 using DgcReader.BlacklistProviders.Italy.LiteDb.Entities;
 using Microsoft.Extensions.Options;
+using DgcReader.Interfaces.Deserializers;
+using DgcReader.Deserializers.Italy;
 
 // Copyright (c) 2021 Davide Trevisan
 // Licensed under the Apache License, Version 2.0
@@ -16,7 +18,7 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb
     /// <summary>
     /// Blacklist provider using the Italian backend
     /// </summary>
-    public class ItalianDrlBlacklistLiteDbProvider : IBlacklistProvider, IDisposable
+    public class ItalianDrlBlacklistLiteDbProvider : IBlacklistProvider, ICustomDeserializerDependentService, IDisposable
     {
         private readonly ItalianDrlBlacklistLiteDbProviderOptions Options;
         private readonly ILogger<ItalianDrlBlacklistLiteDbProvider>? Logger;
@@ -116,6 +118,11 @@ namespace DgcReader.BlacklistProviders.Italy.LiteDb
             var task = await RefreshBlacklistTaskRunner.RunSingleTask(cancellationToken);
             await task;
         }
+        #endregion
+
+        #region Implementation of ICustomDeserializerDependentService
+        /// <inheritdoc/>
+        public IDgcDeserializer GetCustomDeserializer() => new ItalianDgcDeserializer();
         #endregion
 
         /// <inheritdoc/>
